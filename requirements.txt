@@ -1,0 +1,10 @@
+numpy
+matplotlib
+corner
+h5py
+jax
+jax_tqdm
+numpyro
+equinox
+optax
+flowjax

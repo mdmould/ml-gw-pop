@@ -43,7 +43,7 @@ def main():
     c1 = s1z / a1
     c2 = s2z / a2
 
-    injections['mass_1'] = m1
+    injections['mass_1_source'] = m1
     injections['mass_ratio'] = q
     injections['a_1'] = a1
     injections['a_2'] = a2
@@ -56,7 +56,10 @@ def main():
     for k in injections:
         injections[k] = np.atleast_1d(injections[k])
 
-    h5ify.save('vt.h5', injections, compression = 'gzip', compression_opts = 9)
+    h5ify.save(
+        'vt.h5', injections, mode = 'w',
+        compression = 'gzip', compression_opts = 9,
+    )
 
     return
 

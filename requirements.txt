@@ -8,3 +8,4 @@ numpyro
 equinox
 optax
 flowjax
+paramax

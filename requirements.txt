@@ -4,6 +4,7 @@ corner
 h5ify
 jax
 numpyro
+wcosmo
 equinox
 flowjax
 paramax

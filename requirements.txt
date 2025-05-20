@@ -1,11 +1,11 @@
 numpy
 matplotlib
 corner
-h5py
+h5ify
 jax
-jax_tqdm
 numpyro
 equinox
-optax
 flowjax
 paramax
+optax
+jax_tqdm

@@ -1,4 +1,6 @@
 import os
+import numpy as np
+import tqdm
 import json
 import h5py
 import h5ify
@@ -6,15 +8,17 @@ from bilby.gw.prior import UniformSourceFrame
 
 
 def main():
-    os.system(
-        'wget "https://gwosc.org/eventapi/json/query/show?' \
-        'release=GWTC-2.1-confident,GWTC-3-confident&min-mass-2-source=3&max-far=1" ' \
-        '-O events.json',
-    )
-
+    if not os.path.exists('events.json'):
+        os.system(
+            'wget "https://gwosc.org/eventapi/json/query/show?' \
+            'release=GWTC-2.1-confident,GWTC-3-confident&min-mass-2-source=3&max-far=1" ' \
+            '-O events.json',
+        )
     events = json.load(open('events.json', 'r'))['events']
 
-    for key in sorted(events):
+    max_samples = np.inf
+
+    for key in tqdm.tqdm(sorted(events)):
         name = events[key]['commonName']
 
         if not os.path.exists(f'{name}.h5'):
@@ -26,9 +30,18 @@ def main():
             assert '_cosmo' in url
             os.system(f'wget {url} -O {name}.h5')
 
+        with h5py.File(f'{name}.h5', 'r') as f:
+            d = f['C01:Mixed']['posterior_samples']
+            max_samples = min(max_samples, d.size)
+
+    for key in tqdm.tqdm(sorted(events)):
+        name = events[key]['commonName']
+
         if not os.path.exists('pe.h5') or name not in h5py.File('pe.h5', 'r'):
             with h5py.File(f'{name}.h5', 'r') as f:
                 d = f['C01:Mixed']['posterior_samples'][:]
+            idxs = np.random.choice(d.size, max_samples, replace = False)
+            d = d[idxs]
 
             posterior = {par: d[par] for par in (
                 'mass_1_source', 'mass_ratio', 'redshift',
@@ -51,4 +64,5 @@ def main():
 
 
 if __name__ == '__main__':
+    np.random.seed(0)
     main()

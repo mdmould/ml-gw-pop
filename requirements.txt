@@ -2,6 +2,7 @@ numpy
 matplotlib
 corner
 h5ify
+precession
 jax
 numpyro
 wcosmo

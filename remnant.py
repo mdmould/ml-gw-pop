@@ -1,7 +1,5 @@
 import jax.numpy as jnp
 
-# credit: https://github.com/dgerosa/precession
-
 
 def eval_eta(q):
     return q / (1 + q)**2
